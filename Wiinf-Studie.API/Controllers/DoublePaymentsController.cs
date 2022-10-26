@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Wiinf_Studie.API.Data;
 
 namespace Wiinf_Studie.API.Controllers;
 
@@ -7,10 +8,14 @@ namespace Wiinf_Studie.API.Controllers;
 public class DoublePaymentsController : ControllerBase
 {
     private readonly ILogger<DoublePaymentsController> _logger;
+    private readonly CandidatesRepository _candidatesRepository;
 
-    public DoublePaymentsController(ILogger<DoublePaymentsController> logger)
+    public DoublePaymentsController(
+        ILogger<DoublePaymentsController> logger,
+        CandidatesRepository candidatesRepository)
     {
         _logger = logger;
+        _candidatesRepository = candidatesRepository;
     }
 
     /// <summary>
