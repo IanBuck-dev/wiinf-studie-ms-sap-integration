@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wiinf-Studie.API", "Wiinf-Studie.API\Wiinf-Studie.API.csproj", "{2CC02CE6-F38D-4564-A289-2AE4B580CDCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wiinf-Studie.API.Tests", "Wiinf-Studie.API.Tests\Wiinf-Studie.API.Tests.csproj", "{0EEABB41-FC97-4CD1-8507-F137C7D8E0CC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2CC02CE6-F38D-4564-A289-2AE4B580CDCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CC02CE6-F38D-4564-A289-2AE4B580CDCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CC02CE6-F38D-4564-A289-2AE4B580CDCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CC02CE6-F38D-4564-A289-2AE4B580CDCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EEABB41-FC97-4CD1-8507-F137C7D8E0CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EEABB41-FC97-4CD1-8507-F137C7D8E0CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EEABB41-FC97-4CD1-8507-F137C7D8E0CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EEABB41-FC97-4CD1-8507-F137C7D8E0CC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -16,6 +16,6 @@ jobs:
           dotnet-version: "6.0.x"
 
       - name: Build service
-        run: dotnet build Wiinf-Studie.API
+        run: dotnet build
       - name: Test service
         run: dotnet test --no-build
