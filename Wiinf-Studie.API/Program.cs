@@ -21,10 +21,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
-app.UseAuthorization();
+// app.UseAuthorization();
+
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.RoutePrefix = string.Empty;
+});
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
