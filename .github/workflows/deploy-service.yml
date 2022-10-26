@@ -1,0 +1,21 @@
+name: deploy-service
+
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  deploy-service:
+    name: deploy-service
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: "6.0.x"
+
+      - name: Build service
+        run: dotnet build Wiinf-Studie.API
+      - name: Test service
+        run: dotnet test --no-build
