@@ -1,9 +1,13 @@
+using Microsoft.Data.Sqlite;
 using Wiinf_Studie.API.Data;
+using Wiinf_Studie.API.Data.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Settings
+DatabaseConfiguration.DatabaseName = builder.Configuration.GetValue(DatabaseConfiguration.DatabaseNameKey, "Data Source=candidates.db");
 
+// Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -32,5 +36,17 @@ app.UseSwaggerUI(options =>
 });
 
 app.MapControllers();
+
+// Database migration/setup
+using (var scope = app.Services.CreateScope())
+{
+    var repo = scope.ServiceProvider.GetService<CandidatesRepository>();
+
+    if (!(await repo.GetDoublePaymentPairs()).Any())
+    {
+        // If no entries yet, seed database.
+        await DatabaseSetup.SeedDatabaseWithDummyData(100);
+    }
+}
 
 await app.RunAsync();
