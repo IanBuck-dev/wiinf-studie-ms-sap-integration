@@ -22,10 +22,11 @@ public class DoublePaymentsController : ControllerBase
     /// Returns all double payment candidates for the current client.
     /// </summary>
     [HttpGet]
-    public IActionResult Get()
+    public async Task<IActionResult> Get()
     {
+        var result = await _candidatesRepository.GetDoublePaymentPairs();
         // Todo: Implement
-        return Ok();
+        return Ok(result);
     }
 
     /// <summary>

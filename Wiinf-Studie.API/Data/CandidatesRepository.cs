@@ -11,14 +11,18 @@ namespace Wiinf_Studie.API.Data
     // Scoped repository that holds all the database access logic.
     public sealed class CandidatesRepository : IDisposable
     {
-        private const string DatabaseNameKey = "DatabaseName";
-        private readonly string _databaseName;
         private readonly SqliteConnection _dbConnection;
 
-        public CandidatesRepository(IConfiguration config)
+        public CandidatesRepository()
         {
-            _databaseName = config.GetValue(DatabaseNameKey, "Data Source=Product.sqlite");
-            _dbConnection = new SqliteConnection(_databaseName);
+            _dbConnection = new SqliteConnection(DatabaseConfiguration.DatabaseName);
+        }
+
+        public async Task<IEnumerable<string>> GetTables()
+        {
+            var tables = await _dbConnection.QueryAsync<string>("select name from sqlite_schema where type ='table' and name not like 'sqlite_%'");
+
+            return tables;
         }
 
         public async Task<IEnumerable<DoublePaymentPair>> GetDoublePaymentPairs()

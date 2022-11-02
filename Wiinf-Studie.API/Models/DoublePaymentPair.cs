@@ -9,13 +9,16 @@ public class DoublePaymentPair
 {
     public int PairId { get; set; }
     public string Judgement { get; set; } = Judgments.NoSelection;
-    public double Score { get; set; }
+    public decimal Score { get; set; }
     public DoublePaymentCandidate Candidate1 { get; set; }
+    public int Candidate1Id { get; set; }
     public DoublePaymentCandidate Candidate2 { get; set; }
+    public int Candidate2Id { get; set; }
 }
 
 public class DoublePaymentCandidate
 {
+    public int CandidateId { get; set; }
     public string DocumentId { get; set; }
     public decimal Amount { get; set; }
     public string Currency { get; set; } = "EUR";
@@ -41,4 +44,22 @@ public static class Judgments
     public const string NoDuplicatePayment = "No Duplicate payment";
     public const string DuplicatePayment = "Duplicate payment";
     public const string CorrectedDuplicatePayment = "Corrected duplicate payment";
+    public static readonly List<string> Allowed = new()
+        { NoSelection, UnderInspection, NoDuplicatePayment, DuplicatePayment, CorrectedDuplicatePayment };
+}
+
+public static class Currencies
+{
+    public const string EUR = "EUR";
+    public const string USD = "USD";
+    public static readonly List<string> Allowed = new() { EUR, USD };
+}
+
+public static class DocumentTypes
+{
+    // Rechnung
+    public const string Invoice = "Invoice";
+    // Eingangsrechung
+    public const string IncomingInvoice = "Incoming Invoice";
+    public static readonly List<string> Allowed = new() { Invoice, IncomingInvoice };
 }
