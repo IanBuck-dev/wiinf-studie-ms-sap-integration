@@ -25,7 +25,7 @@ public class DoublePaymentsController : ControllerBase
     public async Task<IActionResult> Get()
     {
         var result = await _candidatesRepository.GetDoublePaymentPairs();
-        // Todo: Implement
+
         return Ok(result);
     }
 
@@ -34,10 +34,10 @@ public class DoublePaymentsController : ControllerBase
     /// </summary>
     /// <param name="pairId">The id of the pair to return.</param>
     [HttpGet("{pairId}")]
-    public IActionResult GetById(string pairId)
+    public async Task<IActionResult> GetById(int pairId)
     {
-        // Todo: Implement
-        return Ok();
+        var result = await _candidatesRepository.GetPaymentPairById(pairId);
+        return Ok(result);
     }
 
     /// <summary>
