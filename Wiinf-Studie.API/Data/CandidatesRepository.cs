@@ -11,16 +11,60 @@ namespace Wiinf_Studie.API.Data
     // Scoped repository that holds all the database access logic.
     public sealed class CandidatesRepository : IDisposable
     {
-
-        private const String SqlSelectPairById = $"SELECT * FROM DoublePaymentPairs WHERE pairId = ";
-        private const String SqlSelectAllCandidates = $"SELECT * FROM DoublePaymentCandidates";
-        private const String SqlSelectAllPairs = $"SELECT * FROM DoublePaymentPairs";
         private readonly SqliteConnection _dbConnection;
 
         public CandidatesRepository()
         {
             _dbConnection = new SqliteConnection(DatabaseConfiguration.DatabaseName);
         }
+
+        /// <summary>
+        /// Returns a double payment pair including both candidates.
+        /// </summary>
+        /// <param name="pairId">The id of the pair to retrieve.</param>
+        public async Task<IEnumerable<DoublePaymentPair>> GetDoublePaymentPairByIdIncludingCandidates(int pairId)
+        {
+            var sql = @$"select *
+                from DoublePaymentPairs p
+                where p.Id = {pairId}
+                Left Join DoublePaymentCandidates c1 on p.Candidate1Id = c1.CandidateId
+                left join DoublePaymentCandidates c2 on p.Candidate2Id = c2.CandidateId";
+
+            var result = await _dbConnection.QueryAsync<DoublePaymentPair, DoublePaymentCandidate, DoublePaymentCandidate, DoublePaymentPair>(sql, (pair, candidate1, candidate2) =>
+            {
+                pair.Candidate1 = candidate1;
+                pair.Candidate2 = candidate2;
+
+                return pair;
+            },
+            splitOn: "CandidateId");
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns all double payment pair including both candidates.
+        /// </summary>
+        public async Task<IEnumerable<DoublePaymentPair>> GetDoublePaymentPairsIncludingCandidates()
+        {
+            var sql = @"select *
+                from DoublePaymentPairs p
+                Left Join DoublePaymentCandidates c1 on p.Candidate1Id = c1.CandidateId
+                left join DoublePaymentCandidates c2 on p.Candidate2Id = c2.CandidateId";
+
+            var result = await _dbConnection.QueryAsync<DoublePaymentPair, DoublePaymentCandidate, DoublePaymentCandidate, DoublePaymentPair>(sql, (pair, candidate1, candidate2) =>
+            {
+                pair.Candidate1 = candidate1;
+                pair.Candidate2 = candidate2;
+
+                return pair;
+            },
+            splitOn: "CandidateId");
+
+            return result;
+        }
+
+        #region Helpers
 
         public async Task<IEnumerable<string>> GetTables()
         {
@@ -29,42 +73,11 @@ namespace Wiinf_Studie.API.Data
             return tables;
         }
 
-        public async Task<IEnumerable<DoublePaymentPair>> GetDoublePaymentPairs()
-        {
-
-            var result = await _dbConnection.QueryAsync<DoublePaymentPair>(SqlSelectAllPairs);
-            var resultMatched = await MatchCandidatesToPair(result);
-
-            return resultMatched;
-        }
-
-
-        //Return one DoublePaymentPair by a given Id
-        public async Task<IEnumerable<DoublePaymentPair>> GetPaymentPairById(int pairId){
-
-            var result = await _dbConnection.QueryAsync<DoublePaymentPair>(SqlSelectPairById + pairId);
-            var resultMatched = await MatchCandidatesToPair(result);
-
-            return resultMatched;
-        }
-
-        // Helpers
-        public async Task<IEnumerable<DoublePaymentPair>> MatchCandidatesToPair(IEnumerable<DoublePaymentPair> pairs ){
-
-            var pairData = pairs;
-            var rawCandidateData = await _dbConnection.QueryAsync<DoublePaymentCandidate>(SqlSelectAllCandidates);
-            foreach (var pair in pairData)
-            {
-                //Match the candidate objects in the Pair Candidates results  
-                pair.Candidate1 = rawCandidateData.ToList().Find(el => el.CandidateId == pair.Candidate1Id);
-                pair.Candidate2 = rawCandidateData.ToList().Find(el => el.CandidateId == pair.Candidate2Id);
-
-            }
-            return pairData;
-        }
         public void Dispose()
         {
             _dbConnection?.Dispose();
         }
+
+        #endregion
     }
 }
