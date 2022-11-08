@@ -1,5 +1,7 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Wiinf_Studie.API.Data;
+using Wiinf_Studie.API.Models;
 
 namespace Wiinf_Studie.API.Controllers;
 
@@ -22,10 +24,11 @@ public class DoublePaymentsController : ControllerBase
     /// Returns all double payment candidates for the current client.
     /// </summary>
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<DoublePaymentPair>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Get()
     {
-        var result = await _candidatesRepository.GetDoublePaymentPairs();
-        // Todo: Implement
+        var result = await _candidatesRepository.GetDoublePaymentPairsIncludingCandidates();
+
         return Ok(result);
     }
 
@@ -34,10 +37,11 @@ public class DoublePaymentsController : ControllerBase
     /// </summary>
     /// <param name="pairId">The id of the pair to return.</param>
     [HttpGet("{pairId}")]
-    public IActionResult GetById(string pairId)
+    [ProducesResponseType(typeof(DoublePaymentPair), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetById(int pairId)
     {
-        // Todo: Implement
-        return Ok();
+        var result = await _candidatesRepository.GetDoublePaymentPairByIdIncludingCandidates(pairId);
+        return Ok(result);
     }
 
     /// <summary>

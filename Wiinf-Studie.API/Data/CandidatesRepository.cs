@@ -18,6 +18,54 @@ namespace Wiinf_Studie.API.Data
             _dbConnection = new SqliteConnection(DatabaseConfiguration.DatabaseName);
         }
 
+        /// <summary>
+        /// Returns a double payment pair including both candidates.
+        /// </summary>
+        /// <param name="pairId">The id of the pair to retrieve.</param>
+        public async Task<IEnumerable<DoublePaymentPair>> GetDoublePaymentPairByIdIncludingCandidates(int pairId)
+        {
+            var sql = @$"select *
+                from DoublePaymentPairs p
+                where p.Id = {pairId}
+                Left Join DoublePaymentCandidates c1 on p.Candidate1Id = c1.CandidateId
+                left join DoublePaymentCandidates c2 on p.Candidate2Id = c2.CandidateId";
+
+            var result = await _dbConnection.QueryAsync<DoublePaymentPair, DoublePaymentCandidate, DoublePaymentCandidate, DoublePaymentPair>(sql, (pair, candidate1, candidate2) =>
+            {
+                pair.Candidate1 = candidate1;
+                pair.Candidate2 = candidate2;
+
+                return pair;
+            },
+            splitOn: "CandidateId");
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns all double payment pair including both candidates.
+        /// </summary>
+        public async Task<IEnumerable<DoublePaymentPair>> GetDoublePaymentPairsIncludingCandidates()
+        {
+            var sql = @"select *
+                from DoublePaymentPairs p
+                Left Join DoublePaymentCandidates c1 on p.Candidate1Id = c1.CandidateId
+                left join DoublePaymentCandidates c2 on p.Candidate2Id = c2.CandidateId";
+
+            var result = await _dbConnection.QueryAsync<DoublePaymentPair, DoublePaymentCandidate, DoublePaymentCandidate, DoublePaymentPair>(sql, (pair, candidate1, candidate2) =>
+            {
+                pair.Candidate1 = candidate1;
+                pair.Candidate2 = candidate2;
+
+                return pair;
+            },
+            splitOn: "CandidateId");
+
+            return result;
+        }
+
+        #region Helpers
+
         public async Task<IEnumerable<string>> GetTables()
         {
             var tables = await _dbConnection.QueryAsync<string>("select name from sqlite_schema where type ='table' and name not like 'sqlite_%'");
@@ -25,17 +73,11 @@ namespace Wiinf_Studie.API.Data
             return tables;
         }
 
-        public async Task<IEnumerable<DoublePaymentPair>> GetDoublePaymentPairs()
-        {
-            var result = await _dbConnection.QueryAsync<DoublePaymentPair>("SELECT * FROM DoublePaymentPairs");
-
-            return result;
-        }
-
-        // Helpers
         public void Dispose()
         {
             _dbConnection?.Dispose();
         }
+
+        #endregion
     }
 }
