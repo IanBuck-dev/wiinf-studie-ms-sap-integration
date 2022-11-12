@@ -22,13 +22,14 @@ namespace Wiinf_Studie.API.Data
         /// Returns a double payment pair including both candidates.
         /// </summary>
         /// <param name="pairId">The id of the pair to retrieve.</param>
-        public async Task<IEnumerable<DoublePaymentPair>> GetDoublePaymentPairByIdIncludingCandidates(int pairId)
+        public async Task<DoublePaymentPair?> GetDoublePaymentPairByIdIncludingCandidates(int pairId)
         {
-            var sql = @$"select *
+            var parameters = new { PairId = pairId };
+            var sql = @"select *
                 from DoublePaymentPairs p
-                where p.Id = {pairId}
-                Left Join DoublePaymentCandidates c1 on p.Candidate1Id = c1.CandidateId
-                left join DoublePaymentCandidates c2 on p.Candidate2Id = c2.CandidateId";
+                left join DoublePaymentCandidates c1 on p.Candidate1Id = c1.CandidateId
+                left join DoublePaymentCandidates c2 on p.Candidate2Id = c2.CandidateId
+                where p.PairId = @PairId";
 
             var result = await _dbConnection.QueryAsync<DoublePaymentPair, DoublePaymentCandidate, DoublePaymentCandidate, DoublePaymentPair>(sql, (pair, candidate1, candidate2) =>
             {
@@ -37,9 +38,10 @@ namespace Wiinf_Studie.API.Data
 
                 return pair;
             },
+            param: parameters,
             splitOn: "CandidateId");
 
-            return result;
+            return result.FirstOrDefault();
         }
 
         /// <summary>
@@ -62,6 +64,19 @@ namespace Wiinf_Studie.API.Data
             splitOn: "CandidateId");
 
             return result;
+        }
+
+        public async Task<DoublePaymentPair?> ChangeJudgementOfDoublePaymentPair(int pairId, string newJudgement)
+        {
+            var parameters = new { NewJudgement = newJudgement, PairId = pairId };
+            var sql = @$"update DoublePaymentPairs
+                set Judgement = @NewJudgement
+                where PairId = @PairId";
+
+            await _dbConnection.ExecuteAsync(sql, parameters);
+
+            // Return updated pair with candidates.
+            return await GetDoublePaymentPairByIdIncludingCandidates(pairId);
         }
 
         #region Helpers

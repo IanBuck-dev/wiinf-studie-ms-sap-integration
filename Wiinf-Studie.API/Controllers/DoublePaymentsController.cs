@@ -27,6 +27,7 @@ public class DoublePaymentsController : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<DoublePaymentPair>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Get()
     {
+        // Todo: Add paging
         var result = await _candidatesRepository.GetDoublePaymentPairsIncludingCandidates();
 
         return Ok(result);
@@ -49,11 +50,16 @@ public class DoublePaymentsController : ControllerBase
     /// </summary>
     /// <param name="pairId"></param>
     /// <returns></returns>
-    [HttpPut("{pairId}")]
-    public IActionResult Update(string pairId) // Todo: Add update form
+    [HttpPost("{pairId}/changeJudgement")]
+    public async Task<IActionResult> ChangeJudgement(int pairId, [FromBody] ChangeJudgementForm form)
     {
-        // Todo: Implement
-        return Ok();
+        // Check if pair exists.
+        var pair = await _candidatesRepository.GetDoublePaymentPairByIdIncludingCandidates(pairId);
+
+        if (pair is null) return NotFound();
+
+        var result = await _candidatesRepository.ChangeJudgementOfDoublePaymentPair(pairId, form.Judgement!);
+        return Ok(result);
     }
 
     // No POST or DELETE, as this is not the focus part of the workflow.
