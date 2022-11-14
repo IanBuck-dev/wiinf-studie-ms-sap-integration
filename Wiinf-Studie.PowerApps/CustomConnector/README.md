@@ -13,4 +13,4 @@ Here you can find the instruction for creating a custom api connector in PowerAp
 
 (you might need to change the host url to the one you are using, f.e. via ngrok)
 
-![Demo Connector Setup](/Proxeer Demo Connector Working.jpg)
+<img src="Proxeer Demo Connector Working.jpg">
