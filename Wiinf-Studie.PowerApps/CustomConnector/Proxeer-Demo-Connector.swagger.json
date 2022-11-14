@@ -1,0 +1,203 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Wiinf-Studie.API",
+        "version": "1.0",
+        "description": "This is a demo api connector to the api defined here: https://github.com/IanBuck-dev/wiinf-studie-ms-sap-integration\n\nUses ngrok to connect to locally running service. Therefore, the host url might need to changed if the ngrok process is restarted."
+    },
+    "host": "ad93-2a04-4540-b01-d300-525-a789-7701-ee5a.eu.ngrok.io",
+    "basePath": "/",
+    "schemes": [
+        "https"
+    ],
+    "consumes": [],
+    "produces": [],
+    "paths": {
+        "/DoublePayments": {
+            "get": {
+                "tags": [
+                    "DoublePayments"
+                ],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DoublePaymentPair"
+                            }
+                        }
+                    }
+                },
+                "summary": "GET /DoublePayments",
+                "description": "Returns a list of double payment candidates",
+                "operationId": "Get-doublepayments"
+            }
+        },
+        "/DoublePayments/{pairId}": {},
+        "/DoublePayments/{pairId}/changeJudgement": {
+            "post": {
+                "tags": [
+                    "DoublePayments"
+                ],
+                "consumes": [
+                    "application/json",
+                    "text/json",
+                    "application/*+json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "pairId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/definitions/ChangeJudgementForm"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "Post-changejudgement",
+                "summary": "POST /changeJudgement",
+                "description": "Changes the judgement status of the double payment candidate."
+            }
+        }
+    },
+    "definitions": {
+        "ChangeJudgementForm": {
+            "type": "object",
+            "properties": {
+                "judgement": {
+                    "type": "string",
+                    "title": "",
+                    "enum": [
+                        "No selection",
+                        "Under inspection",
+                        "No Duplicate payment",
+                        "Duplicate payment",
+                        "Corrected duplicate payment"
+                    ],
+                    "default": "No selection"
+                }
+            },
+            "required": [
+                "judgement"
+            ]
+        },
+        "DoublePaymentCandidate": {
+            "type": "object",
+            "properties": {
+                "candidateId": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "documentId": {
+                    "type": "string"
+                },
+                "amount": {
+                    "format": "double",
+                    "type": "number"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "documentType": {
+                    "type": "string"
+                },
+                "companyCode": {
+                    "type": "string"
+                },
+                "vendorNumber": {
+                    "type": "string"
+                },
+                "sapClient": {
+                    "type": "string"
+                },
+                "fiscalYear": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "purchasingDocumentId": {
+                    "type": "string"
+                },
+                "transactionCode": {
+                    "type": "string"
+                },
+                "accountingDate": {
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "documentDate": {
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "clearingDocumentId": {
+                    "type": "string"
+                },
+                "clearingDate": {
+                    "format": "date-time",
+                    "type": "string"
+                }
+            }
+        },
+        "DoublePaymentPair": {
+            "type": "object",
+            "properties": {
+                "pairId": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "judgement": {
+                    "type": "string"
+                },
+                "score": {
+                    "format": "double",
+                    "type": "number"
+                },
+                "candidate1": {
+                    "$ref": "#/definitions/DoublePaymentCandidate"
+                },
+                "candidate1Id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "candidate2": {
+                    "$ref": "#/definitions/DoublePaymentCandidate"
+                },
+                "candidate2Id": {
+                    "format": "int32",
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "parameters": {},
+    "responses": {},
+    "securityDefinitions": {
+        "api_key": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "XApiKey"
+        }
+    },
+    "security": [],
+    "tags": []
+}

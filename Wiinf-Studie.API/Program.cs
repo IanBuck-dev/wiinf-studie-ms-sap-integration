@@ -20,7 +20,12 @@ builder.Services.AddScoped<CandidatesRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.UseSwagger();
+app.UseSwagger(options =>
+{
+    // Needed for PowerApps import of OpenAPI file (only supports v2, not v3)
+    options.SerializeAsV2 = true;
+});
+
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
