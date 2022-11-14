@@ -1,6 +1,6 @@
 # Study - Integration of 3rd party BI tool into Microsoft Power Apps
 
-This repo is part of a feasibility study which explores the integration of third party applications, such as a business intelligence tool for detection double payments for invoices, into the Microsoft ecosystem.
+This repo is part of a feasibility study which explores the integration of third party applications, in this case a business intelligence tool for detecting double payments for invoices, into the Microsoft ecosystem.
 
 In this study, the focus will be on the integration with PowerApps.
 
