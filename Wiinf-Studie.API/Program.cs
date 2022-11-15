@@ -1,6 +1,7 @@
 using Microsoft.Data.Sqlite;
 using Wiinf_Studie.API.Data;
 using Wiinf_Studie.API.Data.Migrations;
+using Wiinf_Studie.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,9 +27,10 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = string.Empty;
 });
 
-// app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Disabled for testing purposes
 
-// app.UseAuthorization();
+// Add authorization via API keys
+app.UseMiddleware<ApiKeyAuthorizationMiddleware>();
 
 app.MapControllers();
 
