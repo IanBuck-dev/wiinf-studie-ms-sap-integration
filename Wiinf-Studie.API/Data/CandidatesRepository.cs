@@ -54,6 +54,7 @@ namespace Wiinf_Studie.API.Data
                 from DoublePaymentPairs p
                 Left Join DoublePaymentCandidates c1 on p.Candidate1Id = c1.CandidateId
                 left join DoublePaymentCandidates c2 on p.Candidate2Id = c2.CandidateId
+                ORDER BY PairId
                 LIMIT @PageSize, @Page";
 
             var result = await _dbConnection.QueryAsync<DoublePaymentPair, DoublePaymentCandidate, DoublePaymentCandidate, DoublePaymentPair>(sql, (pair, candidate1, candidate2) =>
