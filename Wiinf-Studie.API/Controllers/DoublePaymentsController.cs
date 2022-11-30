@@ -2,6 +2,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Wiinf_Studie.API.Data;
 using Wiinf_Studie.API.Models;
+using Wiinf_Studie.API.Utils;
 
 namespace Wiinf_Studie.API.Controllers;
 
@@ -27,8 +28,11 @@ public class DoublePaymentsController : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<DoublePaymentPair>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Get()
     {
-        // Todo: Add paging
-        var result = await _candidatesRepository.GetDoublePaymentPairsIncludingCandidates();
+        var requestContext = HttpContext.GetRequestContext();
+
+        var result = await _candidatesRepository.GetDoublePaymentPairsIncludingCandidates(requestContext);
+
+        HttpContext.AddPagedContextInfo(requestContext);
 
         return Ok(result);
     }

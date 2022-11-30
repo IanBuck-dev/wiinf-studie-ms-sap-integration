@@ -2,6 +2,7 @@ using Microsoft.Data.Sqlite;
 using Wiinf_Studie.API.Data;
 using Wiinf_Studie.API.Data.Migrations;
 using Wiinf_Studie.API.Middlewares;
+using Wiinf_Studie.API.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +45,7 @@ using (var scope = app.Services.CreateScope())
 {
     var repo = scope.ServiceProvider.GetService<CandidatesRepository>();
 
-    if (!(await repo.GetDoublePaymentPairsIncludingCandidates()).Any())
+    if (!(await repo.GetDoublePaymentPairsIncludingCandidates(new RequestContext())).Any())
     {
         // If no entries yet, seed database.
         await DatabaseSetup.SeedDatabaseWithDummyData(100);
