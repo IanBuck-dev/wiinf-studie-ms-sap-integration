@@ -6,6 +6,8 @@ public static class HttpContextUtils
 {
     public const string PageQueryKey = "page";
     public const string PageSizeQueryKey = "pageSize";
+    public const string OrderByQueryKey = "orderBy";
+    public const string FilterByQueryKey = "filterBy";
 
     /// <summary>
     /// Gets the page, pageSize, orderby and filterby from the current http context.
@@ -43,12 +45,30 @@ public static class HttpContextUtils
         // Todo: Implement FilterBy and OrderBy
         var orderBy = "PairId asc";
 
+        if (httpContext.Request.Query.TryGetValue(OrderByQueryKey, out var orderByHeader))
+        {
+            if (!string.IsNullOrEmpty(orderByHeader))
+            {
+                orderBy = orderByHeader;
+            }
+        }
+
+        var filterBy = "";
+
+        if (httpContext.Request.Query.TryGetValue(FilterByQueryKey, out var filterByHeader))
+        {
+            if (!string.IsNullOrEmpty(filterByHeader))
+            {
+                filterBy = filterByHeader;
+            }
+        }
+
         var requestContext = new RequestContext()
         {
             Page = pageNumber,
             PageSize = pageSize,
             OrderBy = orderBy,
-            FilterBy = null,
+            FilterBy = filterBy,
         };
 
         return requestContext;
