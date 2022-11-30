@@ -32,6 +32,8 @@ public class DoublePaymentsController : ControllerBase
 
         var result = await _candidatesRepository.GetDoublePaymentPairsIncludingCandidates(requestContext);
 
+        HttpContext.AddPagedContextInfo(requestContext);
+
         return Ok(result);
     }
 

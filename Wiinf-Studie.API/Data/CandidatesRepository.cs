@@ -49,13 +49,13 @@ namespace Wiinf_Studie.API.Data
         /// </summary>
         public async Task<IEnumerable<DoublePaymentPair>> GetDoublePaymentPairsIncludingCandidates(RequestContext requestContext)
         {
-            var parameters = new { Page = requestContext.Page * requestContext.PageSize, PageSize = requestContext.PageSize };
+            var parameters = new { Page = (requestContext.Page - 1) * requestContext.PageSize, PageSize = requestContext.PageSize };
             var sql = @"select *
                 from DoublePaymentPairs p
                 Left Join DoublePaymentCandidates c1 on p.Candidate1Id = c1.CandidateId
                 left join DoublePaymentCandidates c2 on p.Candidate2Id = c2.CandidateId
                 ORDER BY PairId
-                LIMIT @PageSize, @Page";
+                LIMIT @Page, @PageSize";
 
             var result = await _dbConnection.QueryAsync<DoublePaymentPair, DoublePaymentCandidate, DoublePaymentCandidate, DoublePaymentPair>(sql, (pair, candidate1, candidate2) =>
             {

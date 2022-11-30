@@ -4,8 +4,8 @@ namespace Wiinf_Studie.API.Utils;
 
 public static class HttpContextUtils
 {
-    public const string PageHeaderKey = "page";
-    public const string PageSizeHeaderKey = "pageSize";
+    public const string PageQueryKey = "page";
+    public const string PageSizeQueryKey = "pageSize";
 
     /// <summary>
     /// Gets the page, pageSize, orderby and filterby from the current http context.
@@ -20,7 +20,7 @@ public static class HttpContextUtils
         // Get and validate page number (1 or more).
         var pageNumber = 1;
 
-        if (httpContext.Request.Headers.TryGetValue(PageHeaderKey, out var pageHeader))
+        if (httpContext.Request.Query.TryGetValue(PageQueryKey, out var pageHeader))
         {
             if (int.TryParse(pageHeader, out var parsedPage) && parsedPage >= 1)
             {
@@ -29,9 +29,9 @@ public static class HttpContextUtils
         }
 
         // Get and validate page size (1 - 1000 items).
-        var pageSize = 1;
+        var pageSize = 1000;
 
-        if (httpContext.Request.Headers.TryGetValue(PageSizeHeaderKey, out var pageSizeHeader))
+        if (httpContext.Request.Query.TryGetValue(PageSizeQueryKey, out var pageSizeHeader))
         {
             if (int.TryParse(pageSizeHeader, out var parsedPageSize) && parsedPageSize >= 1 && parsedPageSize <= 1000)
             {
@@ -52,5 +52,17 @@ public static class HttpContextUtils
         };
 
         return requestContext;
+    }
+
+    /// <summary>
+    /// Adds the pagination info onto the 
+    /// </summary>
+    /// <param name="httpContext"></param>
+    /// <param name="context"></param>
+    public static void AddPagedContextInfo(this HttpContext httpContext, RequestContext context)
+    {
+        httpContext.Response.Headers.TryAdd("page", context.Page.ToString());
+        httpContext.Response.Headers.TryAdd("pageSize", context.PageSize.ToString());
+        // Todo: add total items count if needed.
     }
 }
