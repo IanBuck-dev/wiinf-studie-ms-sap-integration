@@ -13,8 +13,10 @@ namespace Wiinf_Studie.API.Data
     {
         private readonly SqliteConnection _dbConnection;
 
-        public CandidatesRepository()
+        private readonly ILogger<CandidatesRepository> _logger;
+        public CandidatesRepository(ILogger<CandidatesRepository> logger)
         {
+            _logger = logger;
             _dbConnection = new SqliteConnection(DatabaseConfiguration.DatabaseName);
         }
 
@@ -49,13 +51,34 @@ namespace Wiinf_Studie.API.Data
         /// </summary>
         public async Task<IEnumerable<DoublePaymentPair>> GetDoublePaymentPairsIncludingCandidates(RequestContext requestContext)
         {
+            // Apply order by
+            var orderBy = "ORDER BY ";
+
+            if (!string.IsNullOrEmpty(requestContext.OrderBy))
+                orderBy += requestContext.OrderBy;
+            else
+                orderBy += "PairId asc";
+
+            // Apply filter by
+            var filterBy = "";
+
+            if (!string.IsNullOrEmpty(requestContext.FilterBy))
+            {
+                filterBy += "WHERE ";
+                filterBy += requestContext.FilterBy;
+            }
+
             var parameters = new { Page = (requestContext.Page - 1) * requestContext.PageSize, PageSize = requestContext.PageSize };
-            var sql = @"select *
+            var sql = string.Join(" ", @"select *
                 from DoublePaymentPairs p
                 Left Join DoublePaymentCandidates c1 on p.Candidate1Id = c1.CandidateId
-                left join DoublePaymentCandidates c2 on p.Candidate2Id = c2.CandidateId
-                ORDER BY PairId
-                LIMIT @Page, @PageSize";
+                left join DoublePaymentCandidates c2 on p.Candidate2Id = c2.CandidateId",
+                filterBy,
+                orderBy,
+                "LIMIT @Page, @PageSize");
+
+            // Log statements
+            _logger.LogInformation("Executed sql statement: {Statement} with parameters: {Parameters}", sql, parameters);
 
             var result = await _dbConnection.QueryAsync<DoublePaymentPair, DoublePaymentCandidate, DoublePaymentCandidate, DoublePaymentPair>(sql, (pair, candidate1, candidate2) =>
             {
