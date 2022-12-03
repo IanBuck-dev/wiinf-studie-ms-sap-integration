@@ -26,7 +26,7 @@ public class DoublePaymentsController : ControllerBase
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<DoublePaymentPair>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get([FromQuery] string? filterBy, [FromQuery] string? orderBy = "PairId asc")
     {
         var requestContext = HttpContext.GetRequestContext();
 
