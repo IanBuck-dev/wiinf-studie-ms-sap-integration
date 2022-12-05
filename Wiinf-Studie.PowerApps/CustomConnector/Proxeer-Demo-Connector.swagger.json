@@ -5,7 +5,7 @@
         "version": "1.0",
         "description": "This is a demo api connector to the api defined here: https://github.com/IanBuck-dev/wiinf-studie-ms-sap-integration\n\nUses ngrok to connect to locally running service. Therefore, the host url might need to changed if the ngrok process is restarted."
     },
-    "host": "ad93-2a04-4540-b01-d300-525-a789-7701-ee5a.eu.ngrok.io",
+    "host": "e286-2a04-4540-b05-fa00-15b5-1129-eff0-5c3.eu.ngrok.io",
     "basePath": "/",
     "schemes": [
         "https"
@@ -23,6 +23,46 @@
                     "application/json",
                     "text/json"
                 ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "filterBy",
+                        "type": "string",
+                        "x-ms-visibility": "important",
+                        "description": "Allows filtering the double payments by informations, like amount or document ids."
+                    },
+                    {
+                        "in": "query",
+                        "name": "orderBy",
+                        "type": "string",
+                        "default": "PairId asc",
+                        "required": true,
+                        "x-ms-visibility": "important"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "type": "integer",
+                        "default": 1,
+                        "required": true,
+                        "x-ms-visibility": "important",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "pageSize",
+                        "type": "integer",
+                        "default": 100,
+                        "required": true,
+                        "x-ms-visibility": "important",
+                        "format": "int64",
+                        "enum": [
+                            10,
+                            100,
+                            1000
+                        ]
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -36,10 +76,42 @@
                 },
                 "summary": "GET /DoublePayments",
                 "description": "Returns a list of double payment candidates",
-                "operationId": "Get-doublepayments"
+                "operationId": "Get-doublepayments",
+                "x-ms-visibility": "important"
             }
         },
-        "/DoublePayments/{pairId}": {},
+        "/DoublePayments/{pairId}": {
+            "get": {
+                "tags": [
+                    "DoublePayments"
+                ],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/DoublePaymentPair"
+                        }
+                    }
+                },
+                "operationId": "GET-doublepayments-byid",
+                "summary": "GET /DoublePayments/id",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "pairId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "description": "Returns a double payment candidate pair by id."
+            }
+        },
         "/DoublePayments/{pairId}/changeJudgement": {
             "post": {
                 "tags": [
@@ -192,12 +264,16 @@
     "parameters": {},
     "responses": {},
     "securityDefinitions": {
-        "api_key": {
+        "API Key": {
             "type": "apiKey",
             "in": "header",
             "name": "XApiKey"
         }
     },
-    "security": [],
+    "security": [
+        {
+            "API Key": []
+        }
+    ],
     "tags": []
 }
