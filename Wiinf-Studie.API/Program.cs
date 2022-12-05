@@ -43,7 +43,7 @@ app.MapControllers();
 // Database migration/setup
 using (var scope = app.Services.CreateScope())
 {
-    var repo = scope.ServiceProvider.GetService<CandidatesRepository>();
+    var repo = scope.ServiceProvider.GetRequiredService<CandidatesRepository>();
 
     if (!(await repo.GetDoublePaymentPairsIncludingCandidates(new RequestContext())).Any())
     {

@@ -1,5 +1,6 @@
 namespace Wiinf_Studie.API.Models;
 
+#pragma warning disable CS8618
 public class DoublePaymentPair
 {
     public int PairId { get; set; }
@@ -58,3 +59,5 @@ public static class DocumentTypes
     public const string IncomingInvoice = "Incoming Invoice";
     public static readonly List<string> Allowed = new() { Invoice, IncomingInvoice };
 }
+
+#pragma warning restore CS8618
