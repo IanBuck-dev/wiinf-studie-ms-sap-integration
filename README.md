@@ -18,10 +18,15 @@ Endpoints:
 Others:
 - simple API key authorization
 - database seeding logic for dummy data
+- for list endpoint:
+  - ordering
+  - filtering
+  - pagination
 
-Open todos include:
-- Adding pagination (in case you have many entities)(easily implemented using Skip & Take)
-- Adding filters/ordering for handling many entities efficiently (f.e. via [Linq to Query string](http://linqtoquerystring.net/))
+Possible improvements:
+- more sophisticated filtering with IQueryable (also needs move to EF Core) (f.e. via [Linq to Query string](http://linqtoquerystring.net/))
+- logic to handle different tenant/accounts etc.
+- ...
 
 The API can be started locally via a tool such as [ngrok](https://ngrok.com/) to expose a online reachable url that can be used in the demo app like: `https://cc8c-2a04-4540-b04-8f00-c842-a24-3793-c0ec.eu.ngrok.io`
 
@@ -35,8 +40,6 @@ ngrok http 5257
 Unfortunately, using git with PowerApps is only available as a experimental feature at the moment: [Use Git version control to edit canvas apps (experimental)](https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/git-version-control) and has several limitations, such as not allowing custom components, which we will most likely use.
 
 Therefore, this repo will include the downloaded PowerApps bundle of the demo app, which can be uploaded into the PowerApps editor.
-
-The app will contain a simple table component which shows the double payment candidates, and a component which can set the judgement status of one candidate pair at a time.
 
 ## PowerApps - Custom API Connector
 
