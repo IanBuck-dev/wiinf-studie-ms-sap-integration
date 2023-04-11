@@ -46,3 +46,7 @@ Therefore, this repo will include the downloaded PowerApps bundle of the demo ap
 In order to connect a REST API into PowerApps (without any sort of published commercial connector), you need to configure a [Custom Connector](https://learn.microsoft.com/en-us/connectors/custom-connectors/define-openapi-definition) f.e. by providing an [OpenAPI doc](https://swagger.io/specification/)(PowerApps currently only support OpenAPI v2) which can then be further configured (f.e. by adding identifiers for the actions to be referenced inside the PowerApp).
 
 This repo contains the configuration of the custom connector that can be imported via the provided json.
+
+## PowerApps - Solution
+
+This is the final export of the created solution.
